@@ -90,7 +90,6 @@ dependencies:
   - r-plyr
   - r-prettyunits
   - r-processx
-  - r-progressr
   - r-promises
   - r-ps
   - r-purrr
