@@ -65,7 +65,6 @@ dependencies:
   - r-later
   - r-lattice
   - r-lifecycle
-  - r-lightr
   - r-listenv
   - r-loo
   - r-lubridate
@@ -84,7 +83,6 @@ dependencies:
   - r-nlme
   - r-officer
   - r-packrat
-  - r-pavo
   - r-pillar
   - r-pkgbuild
   - r-pkgconfig
