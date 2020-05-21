@@ -1,7 +1,11 @@
 
 # Load packages -----------------------------------------------
-library(tidyverse)
 library(colorspace)
+library(magrittr)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(ggplot2)
 
 # Model of visual angles --------------------------------------------------
 

@@ -1,7 +1,7 @@
 
 # Load packages -----------------------------------------------------------
-
-library(tidyverse)
+library(magrittr)
+library(ggplot2)
 
 
 # Make patterns -----------------------------------------------------------

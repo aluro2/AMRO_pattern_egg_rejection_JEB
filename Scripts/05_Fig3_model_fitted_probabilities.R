@@ -1,6 +1,9 @@
 # Load packages -----------------------------------------------------------
-
-library(tidyverse)
+library(magrittr)
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
 library(janitor)
 library(brms)
 library(tidybayes)

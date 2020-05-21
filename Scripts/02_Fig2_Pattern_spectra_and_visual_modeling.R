@@ -1,9 +1,12 @@
 
 # Load packages -----------------------------------------------------------
-
-library(tidyverse)
 library(pavo)
 library(readxl)
+library(magrittr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(readr)
 library(flextable)
 
 # Import reflectance spectra ----------------------------------------------
