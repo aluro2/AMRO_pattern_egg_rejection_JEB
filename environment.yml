@@ -10,6 +10,7 @@ dependencies:
   - r-flextable
   - r-ggplot2
   - r-ggstance
+  - r-magick
   - r-janitor
   - r-magrittr
   - r-modelr
