@@ -2,7 +2,6 @@ channels:
   - conda-forge
 dependencies:
   - r-base=4.0
-  - r-brms
   - r-broom
   - r-colorspace
   - r-dplyr

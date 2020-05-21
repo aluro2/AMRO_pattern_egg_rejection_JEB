@@ -1,0 +1,3 @@
+r-cran-pavo
+r-cran-rstan
+r-cran-brms
