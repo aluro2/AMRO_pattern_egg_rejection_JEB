@@ -1,1 +1,1 @@
-if (!require('pavo')) install.packages('pavo')
+install.packages("pavo")
