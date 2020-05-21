@@ -1,4 +1,4 @@
 libxml2-dev
 libssl-dev 
-ibcurl4-openssl-dev
+libcurl4-openssl-dev
 libopenblas-dev
