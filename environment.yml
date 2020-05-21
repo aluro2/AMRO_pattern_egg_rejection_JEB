@@ -1,7 +1,8 @@
 channels:
   - conda-forge
 dependencies:
-  - r-base=4.0
+  - r-base=3.6
+  - r-brms
   - r-broom
   - r-colorspace
   - r-dplyr
@@ -17,6 +18,7 @@ dependencies:
   - r-readxl
   - r-renv
   - r-reshape2
+  - r-rstan
   - r-scales
   - r-stringr
   - r-tidybayes
