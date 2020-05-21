@@ -13,7 +13,6 @@ dependencies:
   - r-janitor
   - r-magrittr
   - r-modelr
-  - r-pavo
   - r-readr
   - r-readxl
   - r-renv
