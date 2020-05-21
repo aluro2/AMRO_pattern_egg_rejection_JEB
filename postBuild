@@ -1,0 +1,5 @@
+deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran40/
+
+apt install r-cran-pavo
+apt install r-cran-rstan
+apt install r-cran-brms
