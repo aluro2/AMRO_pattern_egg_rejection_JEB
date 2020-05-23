@@ -1,4 +1,2 @@
-libxml2-dev
-libssl-dev 
-libcurl4-openssl-dev
-libopenblas-dev
+
+build-essential
