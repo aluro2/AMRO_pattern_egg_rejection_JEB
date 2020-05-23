@@ -1,6 +1,6 @@
 #!/bin/bash
 
-R
+R --no-save
 
 install.packages("pavo")
 
