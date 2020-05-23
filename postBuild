@@ -1,0 +1,11 @@
+#!/bin/bash
+
+R
+
+install.packages("pavo")
+
+q()
+
+echo "pavo R package installed!"
+
+exit 0
