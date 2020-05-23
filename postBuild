@@ -1,8 +1,1 @@
-
-
-R --no-save
-
-install.packages("pavo")
-
-q()
-
+Rscript install_extras.R
