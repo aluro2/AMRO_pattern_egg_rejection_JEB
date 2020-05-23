@@ -1,1 +1,1 @@
-install.packages("pavo")
+install.packages("pavo", repos='http://cran.us.r-project.org')
