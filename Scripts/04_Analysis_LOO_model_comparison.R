@@ -28,7 +28,8 @@ data <-
 data %>%
   group_by(intersquare_dist_mm) %>% 
   summarise(n_nests = n(),
-            n_rejections = sum(reject_egg)) %>% 
+            n_rejections = sum(reject_egg),
+            .groups = "keep") %>% 
   unite(`N-Rejections | N-Trials`, n_rejections:n_nests, sep = " | ") %>% 
   
   rename(`Inter-square Distance (mm)` =intersquare_dist_mm) %>% 
