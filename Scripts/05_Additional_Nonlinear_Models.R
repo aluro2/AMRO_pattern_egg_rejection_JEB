@@ -26,11 +26,12 @@ data <-
 
 
 priors_nl <- c(
-  prior(normal(0, 6), nlpar = "eta"),
-  prior(student_t(3, 0.5, 2.5), nlpar = "eta", class = "b", coef = "intersquare_dist_mm")
+  prior(normal(0, 3), nlpar = "eta"),
+  prior(student_t(10, 0.5, 2.5), nlpar = "eta", class = "b", coef = "intersquare_dist_mm")
 )
 
-ggfortify::ggdistribution(LaplacesDemon::dst, seq(-5, 5, 0.01),  nu = 3, mu = 0, sigma = 1, fill = "blue")
+ggfortify::ggdistribution(LaplacesDemon::dst, seq(-5, 5, 0.01),  nu = 10, mu = 0.5, sigma =1.5, fill = "blue")
+ggfortify::ggdistribution(dnorm, seq(-5, 5, 0.01),  mean = 0, sd  = 4 ,  fill = "blue")
 
 ## Include asymptotes
 ## lower = 20% (20% rejection rate for Cowbird-sized eggs painted a blue-green American robin mimetic color )
@@ -43,13 +44,31 @@ ggfortify::ggdistribution(LaplacesDemon::dst, seq(-5, 5, 0.01),  nu = 3, mu = 0,
 model_rejection_nl<- 
   brm(
     bf(reject_egg ~ 0.15 + 0.80 * inv_logit(eta),
+       eta ~ intersquare_dist_mm,
+       nl = TRUE),
+    data = data,
+    family = bernoulli("identity"), 
+    prior = priors_nl,
+    seed = 868
+)
+
+summary(model_rejection_nl)
+
+plot(conditional_effects(model_rejection_nl, probs = c(0.05, 0.95), spaghetti = T),  points = T)
+
+pp_check(model_rejection_nl, type = "rootogram")
+plot(model_rejection_nl)
+
+bayes_R2(model_rejection_nl)
+
+# Probit regression -------------------------------------------------------
+
+model_rejection_nl_probit <-
+  brm(
+    bf(reject_egg ~ 0.15 + 0.80 * Phi(eta),
        eta ~ intersquare_dist_mm, nl = TRUE),
     data = data,
     family = bernoulli("identity"), 
     prior = priors_nl
-)
-
-plot(conditional_effects(model_rejection_nl, probs = c(0.05, 0.95), spaghetti = F),  points = T)
-
-pp_check(model_rejection_nl, type = "rootogram")
-
+  )
+  
