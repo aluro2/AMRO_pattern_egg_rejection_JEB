@@ -5,8 +5,10 @@ library(readxl)
 library(magrittr)
 library(dplyr)
 library(tidyr)
+library(forcats)
 library(ggplot2)
 library(readr)
+library(tibble)
 library(flextable)
 
 # Import reflectance spectra ----------------------------------------------
@@ -116,10 +118,10 @@ example_specs %>%
     legend.title = element_blank(),
     #legend.position = "none",
     #legend.position = "right",
-    #legend.position = c(0.22, 0.88),
+    legend.position = c(0.835, 0.63),
     legend.background = element_blank(),
     legend.key = element_blank(),
-    legend.key.size = unit(0.5, "cm")
+    legend.key.size = unit(0.4, "cm")
   )
 
 ggsave("Figures/pattern_naturalegg_comparison.png",
@@ -153,8 +155,8 @@ bb.dc <-
 bb.photodens <- 
   c(1, 1.78, 2.21, 1.9)
 
-## Just-noticeable differences between test pattern spectra and robin eggs
-JNDs <-
+## Quantal cone-catch data
+cone_catch <-
   pattern_spectra %>%
   ## combine pattern egg spectra with real robin egg spectra
   left_join(., robin.eggs) %>%
@@ -168,7 +170,154 @@ JNDs <-
            achromatic = bb.dc,
            vonkries = T,
            relative = F
+  )
+
+# Table of Cone catch values
+
+# Custom Header
+typology <-
+  data.frame(
+    col_keys = c(
+      "Sample",
+      "UVS",
+      "SWS",
+      "MWS",
+      "LWS",
+      "Double-Cone"
+    ),
+    what = c(
+      "Sample",
+      rep("Relative Quantum Catch", 5)
+    ),
+    measure = c(
+      "Sample",
+      "UVS",
+      "SWS",
+      "MWS",
+      "LWS",
+      "Double-Cone"
+    ),
+    stringsAsFactors = FALSE )
+
+# Make Table
+cone_catch %>% 
+  rownames_to_column("Sample") %>% 
+  filter(!Sample %in% c("blueyellow01", "blueyellow02",
+                      "blueyellow03", "blueyellow04", "blueyellow05")) %>% 
+  mutate(Sample = gsub('(.*)_\\w+', '\\1', Sample)) %>% 
+  group_by(Sample) %>% 
+  summarise(
+            UVS = median(lmax373),
+            SWS = median(lmax454),
+            MWS = median(lmax504),
+            LWS = median(lmax557),
+            `Double-Cone` = median(lum),
+            # Make cone-catch values relative to one another (proportion of 1.0)
+            sum = UVS + SWS + MWS + LWS,
+            UVS = UVS/sum,
+            SWS =SWS/sum,
+            MWS = MWS/sum,
+            LWS = LWS/sum) %>% 
+  mutate(Sample = fct_relevel(Sample,
+                              "robinegg",
+                              "blueyellow00",
+                              "blue",
+                              "yellow"),
+         Sample = recode(Sample,
+                         "blue" = "Blue square",
+                         "yellow" = "Yellow square",
+                         "blueyellow00" = "Blended blue-yellow",
+                         "robinegg" = "Natural robin egg \n (median from N = 22 eggs)")) %>%
+  arrange(Sample) %>% 
+  select(!sum) %>% 
+  mutate_if(is.numeric, round, 2) %>% 
+  qflextable() %>%
+  set_header_df(., mapping = typology, key = "col_keys") %>%
+  merge_h(part = "header") %>% 
+  merge_v(part = "header") %>% 
+  compose(j = 2,
+           value = as_paragraph(
+             lollipop(value = log2(UVS/0.25),
+                      max = 1,
+                      min = -1,
+                      width = 0.5,
+                      rectanglesize = 2.5,
+                      neutralrange = c(log2(0.80), log2(1.10)),
+                      neutralcol = "#CCCCCC",
+                      positivecol = "#3234a8"),
+             " ",
+             as_chunk(UVS)),
+          part = "body") %>%
+  compose(j = 3,
+          value = as_paragraph(
+            lollipop(value = log2(SWS/0.37),
+                     max = 1,
+                     min = -1,
+                     width = 0.5,
+                     rectanglesize = 2.5,
+                     neutralrange = c(log2(0.80), log2(1.10)),
+                     positivecol = "#3234a8"),
+            " ",
+            as_chunk(SWS)),
+          part = "body") %>% 
+  compose(j = 4,
+          value = as_paragraph(
+            lollipop(value = log2(MWS/0.26),
+                     max = 1,
+                     min = -1,
+                     width = 0.5,
+                     rectanglesize = 2.5,
+                     neutralrange = c(log2(0.80), log2(1.10)),
+                     positivecol = "#3234a8"),
+            " ",
+            as_chunk(MWS)),
+          part = "body") %>% 
+  compose(j = 5,
+          value = as_paragraph(
+            lollipop(value = log2(LWS/0.13),
+                     max = 1.07,
+                     min = -1,
+                     width = 0.5,
+                     rectanglesize = 2.5,
+                     neutralrange = c(log2(0.80), log2(1.10)),
+                     positivecol = "#3234a8"),
+            " ",
+            as_chunk(LWS)),
+          part = "body") %>% 
+  compose(j = 6,
+          value = as_paragraph(
+            lollipop(value = log2(`Double-Cone`/0.18),
+                     max = 2.1,
+                     min = -1,
+                     width = 0.5,
+                     rectanglesize = 2.5,
+                     neutralrange = c(log2(0.80), log2(1.10)),
+                     positivecol = "#3234a8"),
+            " ",
+            as_chunk(`Double-Cone`)),
+          part = "body") %>%
+  theme_booktabs() %>% 
+  bold(., part = "header") %>%
+  fontsize(
+    part = "header",
+    size = 11
   ) %>%
+  fontsize(
+    part = "body",
+    size = 10
+  ) %>%
+  align(
+    align = "center",
+    part = "all"
+  ) %>%
+  italic(., j = "Sample") %>%
+  width(width = 1.25) %>% 
+  save_as_docx(path = "Figures/Table_01.docx")
+
+## Just-noticeable differences between test pattern spectra and robin eggs
+
+JNDs <-
+  cone_catch %>% 
   ## JND btw 3D eggs and real robin eggs
   coldist(.,
           noise = "neural",
@@ -202,6 +351,19 @@ as.rspec(left_join(subset(pattern_spectra, "blueyellow00"), robin.eggs)) %>%
        lwd = 5,
        ylim=c(0, 100))
 
+# Get within pattern JND, blue vs. yellow square
+within_pattern_JND <- 
+  cone_catch %>% 
+  ## JND btw 3D eggs and real robin eggs
+  coldist(.,
+          noise = "neural",
+          achro = T,
+          weber = 0.1,
+          weber.ref = "longest"
+  ) %>% 
+    filter(patch1 == "blue" & patch2 == "yellow")
+  
+
 # JND table ---------------------------------------------------------------
 
 JNDs %>% 
@@ -214,10 +376,23 @@ JNDs %>%
                          )) %>% 
   rename(Stimulus = patch1) %>%
   mutate_if(is.numeric, round, 1) %>% 
-  unite("Chromatic JND range", median_dS:max_dS, sep = ",") %>%
-  unite("Achromatic JND range", median_dL:max_dL, sep = ",") %>% 
+  unite("range_dS", min_dS:max_dS, sep = ", ") %>% 
+  unite("range_dL", min_dL:max_dL, sep = ", ") %>% 
+  mutate(range_dS = paste(range_dS, ")", sep = ""),
+         range_dL = paste(range_dL, ")", sep = "")) %>% 
+  unite("Chromatic JND median (range)", median_dS:range_dS, sep = " (") %>%
+  unite("Achromatic JND median (range)", median_dL:range_dL, sep = " (") %>%
+  arrange(Stimulus) %>% 
+  mutate(Comparison = "JND from natural robin eggs") %>% 
+  # add row for blue vs. yellow square JND
+  rbind(list(
+          "Blue vs. yellow square",
+          12.5,
+          5.9,
+          "JND within pattern")) %>% 
+  as_grouped_data(., groups = c("Comparison")) %>% 
   qflextable() %>%
-  theme_alafoli() %>%
+  #theme_alafoli() %>%
   bold(., part = "header") %>%
   fontsize(
     part = "header",
@@ -233,7 +408,7 @@ JNDs %>%
   ) %>%
   italic(., j = "Stimulus") %>%
   autofit() %>%
-  print(.)
+save_as_docx(path = "Figures/Fig.1C.docx")
   ## Only works if MS Powerpoint is available
   #print(., preview = "pptx")
 
@@ -289,7 +464,10 @@ jndplot_specs %>%
           cex.axis = 0.6,
           arrow.p = 2.25,
           margin = c(0, 1.5, 0, 0.01),
-          angle = 20)
+          angle = 20,
+          xlab = "X (JND)",
+          ylab = "Y (JND)",
+          zlab = "Z (JND)")
 
 dev.off()
 
