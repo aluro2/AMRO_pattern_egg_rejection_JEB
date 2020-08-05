@@ -108,12 +108,12 @@ pp_check(model_rejection_nl,
          type = "rootogram",
          nsamples = 100)
 
-# R2[Error] = 0.10 [0.09]
+# R2[Error] = 0.11 [0.09]
 bayes_R2(model_rejection_nl, robust = T)
 
 ## Highest Density interval of interquare_dist_mm
 
-# Posterior Median +- MAD [95% Credible Interval] = 1.29 +- 0.75 [-0.07, 2.97]
+# Posterior Median +- MAD [95% Credible Interval] = 1.18 +- 0.68 [-0.06, 2.71]
 ## brms
 posterior_summary(model_rejection_nl, 
                   robust = T)
@@ -126,7 +126,7 @@ model_rejection_nl %>%
 
 # Get rejection threshold (inter-square distance where rejection prob = 0.5) --------------------
 
-# treshold +- error [75% Credible Interval] = 1.357mm +- 0.5mm [0.833, 1.899]
+# treshold +- error [75% Credible Interval] = 1.29mm +- 0.55mm [0.67, 1.83]
 data %>%
   data_grid(
     intersquare_dist_mm = seq_range(intersquare_dist_mm, by = 0.001),
@@ -141,3 +141,8 @@ data %>%
   ## Get posterior median and 75% credible interval
   posterior_summary(robust = T, probs = c(0.15, 0.85))
 
+# Viewing angle threshold
+
+viewing_distance_mm <- c(10,100)
+
+viewing_angle <- 2*atan((1.29) /(viewing_distance_mm*2))
