@@ -47,12 +47,12 @@ ggplot(median_fit, aes(x = intersquare_dist_mm, y = reject_egg)) +
   ## global model fit
   geom_path(aes(y = median_val), size = 1.5, alpha = 1, color = "black") +
   ## 0.5 rejection probability threshold
-  geom_segment(x = 1.357, xend = 1.357, y = 0, yend = 0.5,
+  geom_segment(x = 1.175, xend = 1.175, y = 0, yend = 0.5,
                color = "red",
                alpha = 0.3,
                size = 1.5,
                linetype = "dotted") +
-  geom_pointrangeh(aes(y = 0.5, x = 1.357,  xmin = 0.833, xmax = 1.899),
+  geom_pointrangeh(aes(y = 0.5, x = 1.175,  xmin = 0.561, xmax = 1.755),
                    fill = "red",
                    color = "red",
                    stroke = 1,
