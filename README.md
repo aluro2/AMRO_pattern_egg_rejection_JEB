@@ -1,8 +1,7 @@
----
-title: "R analyses for [*Visual acuity and egg spatial chromatic contrast predict egg rejection behavior of American robins*](https://doi.org/10.1242/jeb.229609)"
-author: "Alec B. Luro"
-date: "(last updated) 25 September 2020"
----
+# R analyses for [*Visual acuity and egg spatial chromatic contrast predict egg rejection behavior of American robins*](https://doi.org/10.1242/jeb.229609)
+## Alec B. Luro
+## (last updated) 25 September 2020
+
 
 # Running analyses remotely
 Remote RStudio session: [![Binder](http://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/aluro2/AMRO_pattern_egg_rejection_JEB/master?urlpath=rstudio)
