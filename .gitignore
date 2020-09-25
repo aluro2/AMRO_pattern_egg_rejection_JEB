@@ -39,8 +39,8 @@ vignettes/*.pdf
 .Renviron
 
 # Docker
-Dockerfile
-*bash_scripts/
+#Dockerfile
+#*bash_scripts/
 .bash_history
 .local/
 .rstudio/
