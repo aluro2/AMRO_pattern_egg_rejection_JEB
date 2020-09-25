@@ -41,3 +41,6 @@ vignettes/*.pdf
 # Docker
 Dockerfile
 *bash_scripts/
+.bash_history
+.local/
+.rstudio/
